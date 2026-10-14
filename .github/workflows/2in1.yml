@@ -280,6 +280,9 @@ jobs:
         shell: bash
         env:
           MODEL: ${{ matrix.model }}
+          # token 只能从 env 传入：本 run 块超过 21000 字符，
+          # 一旦块内出现 ${{ }} 就会被 GitHub 按表达式模板校验并报错
+          AINAS_TOKEN: ${{ secrets.ACTION_TOKEN }}
         run: |
           set -euo pipefail
 
@@ -404,6 +407,18 @@ jobs:
           else
             echo "[INFO] p3 分区中未找到 bzImage-rr，跳过重命名"
           fi
+
+          # ── 取 CKs / LKMs / addons / modules ───────────────────────
+          # 仓库地址已直接写在 scripts/func.sh 里，这里不再 sed 替换。
+          # 这些函数会 rm -rf 目标目录，而 p3 内文件属 root，必须以 root 执行；
+          # 顺带让新落盘的文件保持 root 属主，与镜像其余部分一致。
+          sudo env AINAS_TOKEN="${AINAS_TOKEN}" WORKDIR="${WORKDIR}" SYSTEM_MNT="${SYSTEM_MNT}" bash -c '
+            . "${WORKDIR}/scripts/func.sh" "${AINAS_TOKEN}"
+            getCKs     "${SYSTEM_MNT}/cks"     "true"
+            getLKMs    "${SYSTEM_MNT}/lkms"    "true"
+            getAddons  "${SYSTEM_MNT}/addons"  "true"
+            getModules "${SYSTEM_MNT}/modules" "true"
+          '
 
           # ── Addons 处理 ────────────────────────────────────────────
           sudo mkdir -p "$SYSTEM_MNT/addons"
