@@ -6,7 +6,7 @@ This repository is a build-oriented copy of `rr` for **2in1** and **OVA** packag
 
 - Build RR images with the `2in1` workflow
 - Build OVA artifacts with the `ova` workflow
-- Keep the source tree in sync with upstream RR while preserving the build automation used by `ainas2in1`
+- Keep the source tree in sync with upstream RR while preserving the build automation used by `ainas-2in1`
 
 ## Main workflows
 
@@ -16,7 +16,7 @@ This repository is a build-oriented copy of `rr` for **2in1** and **OVA** packag
 
 ## Notes
 
-- The workflows depend on `myp015/ainas2in1`
+- The workflows depend on `myp015/ainas-2in1`
 - Generated artifacts include RR images and packaged outputs such as `.zip` / `.ova.gz`
 - This repo is intended for build output and release automation, not for end-user documentation
 
